@@ -1,6 +1,6 @@
 // agendamento_service.dart
 import 'package:dio/dio.dart';
-import 'dio_config.dart';
+import '../config/dio_config.dart';
 
 class AgendamentoService {
   final Dio dio = DioConfig.buildDioClient();
