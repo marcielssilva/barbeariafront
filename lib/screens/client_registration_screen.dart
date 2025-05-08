@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import '../services/client_service.dart';
 import '../models/client_model.dart';
 
@@ -6,7 +7,8 @@ class ClientRegistrationScreen extends StatefulWidget {
   const ClientRegistrationScreen({super.key});
 
   @override
-  State<ClientRegistrationScreen> createState() => _ClientRegistrationScreenState();
+  State<ClientRegistrationScreen> createState() =>
+      _ClientRegistrationScreenState();
 }
 
 class _ClientRegistrationScreenState extends State<ClientRegistrationScreen> {
@@ -39,7 +41,11 @@ class _ClientRegistrationScreenState extends State<ClientRegistrationScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Client ${createdClient.name} created!')),
+          SnackBar(
+            content: Text(
+              'Cliente ${createdClient.name} cadastrado com sucesso!',
+            ),
+          ),
         );
         _clearForm();
       }
@@ -59,47 +65,145 @@ class _ClientRegistrationScreenState extends State<ClientRegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register Client')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
-                validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
-              ),
-              TextFormField(
-                controller: _phoneController,
-                decoration: const InputDecoration(labelText: 'Phone'),
-                validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
-                keyboardType: TextInputType.phone,
-              ),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 20),
-              if (_isLoading)
-                const CircularProgressIndicator()
-              else
+      appBar: AppBar(
+        title: const Text('Cadastro de Cliente'),
+        backgroundColor: Colors.transparent, // Tornando transparente
+        elevation: 0, // Removendo sombra
+        foregroundColor: Colors.black, // Cor do texto
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.blue[50]!, // Cor clara
+                Colors.blue[100]!, // Cor mais escura
+              ],
+            ),
+          ),
+        ),
+      ),
+      body: Container(
+        // Gradiente de fundo
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.blue[50]!, // Cor clara
+              Colors.blue[100]!, // Cor mais escura
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                // Campo Nome
+                TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Nome',
+                    labelStyle: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                  validator:
+                      (value) =>
+                          value?.isEmpty ?? true ? 'Digite o nome' : null,
+                ),
+                const SizedBox(height: 20),
+
+                // Campo Telefone
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: InputDecoration(
+                    labelText: 'Telefone',
+                    labelStyle: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                  validator:
+                      (value) =>
+                          value?.isEmpty ?? true ? 'Digite o telefone' : null,
+                  keyboardType: TextInputType.phone,
+                ),
+                const SizedBox(height: 20),
+
+                // Campo Email
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'E-mail',
+                    labelStyle: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                  validator:
+                      (value) =>
+                          value?.isEmpty ?? true ? 'Digite o e-mail' : null,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 20),
+
+                // Botão de Cadastro
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: const Text('Register'),
-                ),
-              if (_errorMessage != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Text(
-                    _errorMessage!,
-                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: Colors.blueAccent,
+                    textStyle: TextStyle(fontFamily: 'Poppins', fontSize: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
+                  child: const Text('Cadastrar Cliente'),
                 ),
-            ],
+
+                // Indicador de Carregamento
+                if (_isLoading)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+
+                // Mensagem de erro
+                if (_errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Text(
+                      _errorMessage!,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
