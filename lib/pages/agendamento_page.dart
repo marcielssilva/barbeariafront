@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:intl/intl.dart'; // Para formatação de data/hora
 
 class AgendamentoPage extends StatefulWidget {
+  const AgendamentoPage({super.key});
+
   @override
   _AgendamentoPageState createState() => _AgendamentoPageState();
 }
@@ -19,16 +21,17 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
       try {
         final dio = Dio();
         final response = await dio.post(
-          'http://10.0.2.2:8080/agendamentos',
+          'http://localhost:8080/api/appointments',
           data: {
-            'nome': nomeController.text,
-            'contato': contatoController.text,
-            'dia': diaController.text,
-            'horario': horarioController.text,
+            'barberId': 1,
+            'customerId': 1,
+            'date': diaController.text,
+            'time': horarioController.text,
+            'serviceType': 'Corte',
           },
         );
 
-        if (response.statusCode == 200) {
+        if (response.statusCode == 200 || response.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Agendamento realizado com sucesso!')),
           );
@@ -39,12 +42,13 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
           );
         }
       } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Erro: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro: $e')),
+        );
       }
     }
   }
+
 
   // Função para selecionar e formatar a data
   void _selectDate(BuildContext context) async {

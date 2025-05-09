@@ -8,12 +8,13 @@ class AgendamentoService {
   Future<void> agendar(String nome, String contato, String dia, String horario) async {
     try {
       final response = await dio.post(
-        '/agendamentos',
+        '/appointments',
         data: {
-          'nome': nome,
-          'contato': contato,
-          'dia': dia,
-          'horario': horario,
+          'barberId': 1, // Replace with actual selection logic if needed
+          'customerId': 1, // TODO-> quando implementar login, isso nao vai ser mais hardcoded (id do user)
+          'date': dia, // or diaController.text
+          'time': horario, // or horarioController.text
+          'serviceType': 'Corte', // You can make this dynamic later
         },
       );
 
