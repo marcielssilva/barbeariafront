@@ -9,7 +9,7 @@ class ClientService {
   Future<Client> createClient(Client client) async {
     try {
       final response = await _dio.post(
-        '/api/clients',
+        '/customers',
         data: client.toJson(),
       );
 
