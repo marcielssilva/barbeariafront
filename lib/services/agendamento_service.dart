@@ -5,7 +5,7 @@ import '../config/dio_config.dart';
 class AgendamentoService {
   final Dio dio = DioConfig.buildDioClient();
 
-  Future<void> agendar(String nome, String contato, String dia, String horario) async {
+  Future<void> agendar(String nome, String contato, String dia, String horario, String serviceType) async {
     try {
       final response = await dio.post(
         '/appointments',
@@ -14,7 +14,7 @@ class AgendamentoService {
           'customerId': 1, // TODO-> quando implementar login, isso nao vai ser mais hardcoded (id do user)
           'date': dia, // or diaController.text
           'time': horario, // or horarioController.text
-          'serviceType': 'Corte', // You can make this dynamic later
+          'serviceType': serviceType, // You can make this dynamic later
         },
       );
 
