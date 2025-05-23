@@ -13,7 +13,7 @@ class ClientService {
         data: client.toJson(),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return Client.fromJson(response.data);
       } else {
         throw Exception('Failed to create client');
@@ -25,7 +25,7 @@ class ClientService {
 
   Future<List<Client>> getClients() async {
     try {
-      final response = await _dio.get('/api/clients');
+      final response = await _dio.get('/api/customers');
       return (response.data as List)
           .map((json) => Client.fromJson(json))
           .toList();

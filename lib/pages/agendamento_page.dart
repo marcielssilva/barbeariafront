@@ -23,11 +23,11 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
         final response = await dio.post(
           'http://localhost:8080/api/appointments',
           data: {
-            'barberId': 1,
-            'customerId': 1,
+            'barberId': "bdf70c95-6c33-4a39-aef3-f98e3f3b77a0",
+            'customerId': "4242bda5-74c6-4cd3-8432-4bb1d00c3645",
             'date': diaController.text,
             'time': horarioController.text,
-            'serviceType': 'Corte',
+            'serviceType': 'HAIRCUT',
           },
         );
 

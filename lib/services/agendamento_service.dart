@@ -10,11 +10,11 @@ class AgendamentoService {
       final response = await dio.post(
         '/appointments',
         data: {
-          'barberId': 1, // Replace with actual selection logic if needed
-          'customerId': 1, // TODO-> quando implementar login, isso nao vai ser mais hardcoded (id do user)
+          'barberId': "bdf70c95-6c33-4a39-aef3-f98e3f3b77a0", // Replace with actual selection logic if needed
+          'customerId': "4242bda5-74c6-4cd3-8432-4bb1d00c3645", // TODO-> quando implementar login, isso nao vai ser mais hardcoded (id do user)
           'date': dia, // or diaController.text
           'time': horario, // or horarioController.text
-          'serviceType': serviceType, // You can make this dynamic later
+          'serviceType': "HAIRCUT", // You can make this dynamic later
         },
       );
 
