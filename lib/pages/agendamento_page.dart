@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:intl/intl.dart'; // Para formatação de data/hora
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AgendamentoPage extends StatefulWidget {
   const AgendamentoPage({super.key});
@@ -16,18 +18,42 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
   final diaController = TextEditingController();
   final horarioController = TextEditingController();
 
+  String _selectedServiceType = 'HAIRCUT';
+
+  final Map<String, String> serviceOptions = {
+    'Cabelo': 'HAIRCUT',
+    'Barba': 'BEARD',
+  };
+
   void _enviarAgendamento() async {
     if (_formKey.currentState!.validate()) {
       try {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('accessToken');
+
+        if (token == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Token não encontrado. Faça login.')),
+          );
+          return;
+        }
+
+        final decodedToken = JwtDecoder.decode(token);
+        final customerId = decodedToken['userId']; // Must match claim name in your backend
+
         final dio = Dio();
+        dio.options.headers['Authorization'] = 'Bearer $token';
+
         final response = await dio.post(
           'http://localhost:8080/api/appointments',
           data: {
-            'barberId': 1,
-            'customerId': 1,
-            'date': diaController.text,
-            'time': horarioController.text,
-            'serviceType': 'Corte',
+            'barberId': 'a04027e0-cf42-4a6e-ad5d-df00fc3ea73a',
+            'customerId': customerId,
+            'date': DateFormat('yyyy-MM-dd').format(
+              DateFormat('dd/MM/yyyy').parse(diaController.text),
+            ),
+            'startTime': horarioController.text,
+            'serviceType': _selectedServiceType,
           },
         );
 
@@ -49,8 +75,6 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
     }
   }
 
-
-  // Função para selecionar e formatar a data
   void _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -66,7 +90,6 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
     }
   }
 
-  // Função para selecionar e formatar o horário
   void _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -123,11 +146,6 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                   controller: nomeController,
                   decoration: InputDecoration(
                     labelText: 'Nome',
-                    labelStyle: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -141,11 +159,6 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                   controller: contatoController,
                   decoration: InputDecoration(
                     labelText: 'WhatsApp',
-                    labelStyle: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -160,11 +173,6 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                   controller: diaController,
                   decoration: InputDecoration(
                     labelText: 'Dia (dd/mm/aaaa)',
-                    labelStyle: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -180,11 +188,6 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                   controller: horarioController,
                   decoration: InputDecoration(
                     labelText: 'Horário (hh:mm)',
-                    labelStyle: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -197,13 +200,36 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                   readOnly: true,
                 ),
                 const SizedBox(height: 20),
+                DropdownButtonFormField<String>(
+                  value: _selectedServiceType,
+                  decoration: InputDecoration(
+                    labelText: 'Serviço',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                  items: serviceOptions.entries.map((entry) {
+                    return DropdownMenuItem<String>(
+                      value: entry.value,
+                      child: Text(entry.key),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedServiceType = value!;
+                    });
+                  },
+                ),
+                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: _enviarAgendamento,
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
                     backgroundColor: Colors.blueAccent,
-                    textStyle: TextStyle(fontFamily: 'Poppins', fontSize: 18),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    textStyle: TextStyle(fontSize: 18),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

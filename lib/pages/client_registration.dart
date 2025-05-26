@@ -18,6 +18,8 @@ class _ClientRegistrationScreenState extends State<ClientRegistrationScreen> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -35,6 +37,7 @@ class _ClientRegistrationScreenState extends State<ClientRegistrationScreen> {
         name: _nameController.text,
         phone: _phoneController.text,
         email: _emailController.text,
+        password: _passwordController.text
       );
 
       final createdClient = await _clientService.createClient(newClient);
@@ -60,6 +63,7 @@ class _ClientRegistrationScreenState extends State<ClientRegistrationScreen> {
     _nameController.clear();
     _phoneController.clear();
     _emailController.clear();
+    _passwordController.clear();
   }
 
   @override
@@ -168,6 +172,27 @@ class _ClientRegistrationScreenState extends State<ClientRegistrationScreen> {
                   keyboardType: TextInputType.emailAddress,
                 ),
                 const SizedBox(height: 20),
+                // Campo Senha
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    labelStyle: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                  obscureText: true,
+                  validator: (value) =>
+                  value == null || value.isEmpty ? 'Digite a senha' : null,
+                ),
+                const SizedBox(height: 20),
 
                 // Botão de Cadastro
                 ElevatedButton(
@@ -215,6 +240,8 @@ class _ClientRegistrationScreenState extends State<ClientRegistrationScreen> {
     _nameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 }
+

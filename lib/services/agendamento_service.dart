@@ -1,9 +1,10 @@
 // agendamento_service.dart
+import 'package:barbeariafront/api/api_client.dart';
 import 'package:dio/dio.dart';
 import '../config/dio_config.dart';
 
 class AgendamentoService {
-  final Dio dio = DioConfig.buildDioClient();
+  final Dio dio = ApiClient.dio;
 
   Future<void> agendar(String nome, String contato, String dia, String horario, String serviceType) async {
     try {

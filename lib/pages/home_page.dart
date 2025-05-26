@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'agendamento_page.dart';
-import '../screens/client_registration_screen.dart';
+import 'login.dart';
+import 'client_registration.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -54,7 +54,7 @@ class HomePage extends StatelessWidget {
                   const SizedBox(height: 30),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.calendar_today),
-                    label: const Text('Agendar Atendimento'),
+                    label: const Text('Faça seu Login'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black87,
@@ -73,14 +73,14 @@ class HomePage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => AgendamentoPage()),
+                        MaterialPageRoute(builder: (_) => LoginScreen()),
                       );
                     },
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.person_add),
-                    label: const Text('Cadastrar Cliente'),
+                    label: const Text('Realize seu Cadastro'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black87,
