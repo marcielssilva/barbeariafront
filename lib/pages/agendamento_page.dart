@@ -14,8 +14,6 @@ class AgendamentoPage extends StatefulWidget {
 
 class _AgendamentoPageState extends State<AgendamentoPage> {
   final _formKey = GlobalKey<FormState>();
-  final nomeController = TextEditingController();
-  final contatoController = TextEditingController();
   final diaController = TextEditingController();
   final horarioController = TextEditingController();
 
@@ -29,8 +27,6 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
 
   @override
   void dispose() {
-    nomeController.dispose();
-    contatoController.dispose();
     diaController.dispose();
     horarioController.dispose();
     super.dispose();
@@ -65,7 +61,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
         final response = await dio.post(
           apiUrl,
           data: {
-            'barberId': 'a04027e0-cf42-4a6e-ad5d-df00fc3ea73a',
+            'barberId': 'd8493d62-30e2-400d-827a-7e271011074e',
             'customerId': customerId,
             'date': DateFormat(
               'yyyy-MM-dd',
@@ -214,7 +210,8 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
     return InputDecoration(
       labelText: label,
       labelStyle: TextStyle(color: Colors.white70),
-      hintText: hintText ?? 'Digite aqui...', // HintText padrão
+      hintText: hintText ?? 'Digite aqui...',
+      // HintText padrão
       hintStyle: TextStyle(color: Colors.white38),
       prefixIcon:
           prefixIcon != null ? Icon(prefixIcon, color: Colors.white70) : null,
@@ -296,51 +293,6 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
             key: _formKey,
             child: ListView(
               children: [
-                _buildSectionTitle(context, 'Detalhes do Cliente'),
-                Card(
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  color: Colors.white.withOpacity(0.05),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: nomeController,
-                          style: TextStyle(color: Colors.white),
-                          decoration: _customInputDecoration(
-                            'Nome Completo',
-                            prefixIcon: Icons.person_outline,
-                          ),
-                          validator:
-                              (value) =>
-                                  value == null || value.isEmpty
-                                      ? 'Digite o nome'
-                                      : null,
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          controller: contatoController,
-                          style: TextStyle(color: Colors.white),
-                          decoration: _customInputDecoration(
-                            'WhatsApp',
-                            prefixIcon: Icons.phone_outlined,
-                            hintText: 'Ex: 11987654321',
-                          ),
-                          keyboardType: TextInputType.phone,
-                          validator:
-                              (value) =>
-                                  value == null || value.isEmpty
-                                      ? 'Digite o número de WhatsApp'
-                                      : null,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
                 _buildSectionTitle(context, 'Data e Horário'),
                 Card(
                   elevation: 3,
