@@ -1,16 +1,45 @@
-# barbeariafront
+# 💈 Barbearia Front - Flutter App
 
-A new Flutter project.
+Aplicativo mobile desenvolvido em **Flutter** para permitir que clientes agendem horários em uma barbearia, visualizem serviços e barbeiros disponíveis, e recebam notificações.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 📱 Tecnologias Utilizadas
 
-A few resources to get you started if this is your first Flutter project:
+- [Flutter](https://flutter.dev/) 3.x
+- [Dart](https://dart.dev/)
+- [Material Design](https://m3.material.io/)
+- Integração com API REST (backend em Spring Boot)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🧰 Funcionalidades
+
+- Autenticação de usuários
+- Agendamento de horários com barbeiros
+- Visualização de serviços oferecidos
+- Interface amigável e responsiva
+- Integração com notificações via WhatsApp (via backend/Twilio)
+
+---
+
+## 🚀 Como Rodar o Projeto
+
+### ✅ Pré-requisitos
+
+- Flutter instalado na máquina ([guia de instalação](https://docs.flutter.dev/get-started/install))
+- Emulador Android, iOS ou dispositivo físico conectado
+- Backend em execução (para acessar os dados)
+
+### ▶️ Passos para rodar:
+
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/barbeariafront.git
+cd barbeariafront
+
+# Instale as dependências
+flutter pub get
+
+# Rode o app em um emulador ou dispositivo
+flutter run
